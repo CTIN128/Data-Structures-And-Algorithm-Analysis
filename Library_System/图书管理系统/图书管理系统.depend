@@ -1,0 +1,16 @@
+# depslib dependency file v1.0
+1451824587 source:c:\users\administrator\desktop\新建文件夹\图书管理系统\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1452261586 source:g:\codeblockscode\图书信息系统\图书管理系统\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
+1467270939 source:g:\codeblocksproject\图书信息系统\图书管理系统\main.c
+	<stdio.h>
+	<stdlib.h>
+	<string.h>
+
