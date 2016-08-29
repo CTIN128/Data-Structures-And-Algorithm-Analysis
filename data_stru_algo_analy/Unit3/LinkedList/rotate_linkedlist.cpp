@@ -12,4 +12,4 @@
 	header -> next = nullptr;
  }
  */
-//make the singly Linkedlist rotate
+make the singly Linkedlist rotate
