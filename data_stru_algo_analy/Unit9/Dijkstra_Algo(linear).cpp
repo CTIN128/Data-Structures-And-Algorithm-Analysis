@@ -1,3 +1,9 @@
+/*
+ *Dijkstra扫描邻接表的方式获取最小距离
+ *面对的是图稠密的情况
+ */
+
+
 #include <iostream>
 #include <string>
 
@@ -246,7 +252,7 @@ VertexPro* Dijkstra(AdjlistHead* header, VertexPro* Vertices,int Vernum, const i
 			
 				}
 				//如果该点已经被修改并且他的path不为V1
-				else if(Vertices[tmpptr->_vertex].Dist != MAX && Vertices[tmpptr->_vertex].Path != 1)
+				else if(Vertices[tmpptr->_vertex].Dist != MAX && Vertices[tmpptr->_vertex].Path != start)
 				{   
 					int temppath = Vertices[tmpptr->_vertex].Path;
 					Vertices[tmpptr->_vertex].Path = tmpcell._vertex;
@@ -342,6 +348,6 @@ int main()
 		{
 			std::cout << 'V' << i << ": ";
 			Vertices[i].OutputProperty();
-		}
+		} 
 	}
 }
