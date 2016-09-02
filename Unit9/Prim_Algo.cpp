@@ -1,6 +1,7 @@
 /*
-*Dijkstra堆DeleteMin的方式获取最小距离
+*Dijkstra linear的方式获取最小距离
 *面对的是图稀疏的情况
+*涉及到堆的都没用
 */
 
 
@@ -65,6 +66,7 @@ VertexPro* Initiliaze_Vertex(int Vernum, const int& start)//同理
 		Vertices[i + 1].Known = 0;
 		Vertices[i + 1].Path = -1;
 	}
+	Vertices[start].Known = 1;
 	Vertices[start].Dist = 0;
 	Vertices[start].Path = 0;
 	return Vertices;
@@ -115,9 +117,8 @@ public:
 	Heap(const int&Size);
 	index Insert(Heap_Node temp);
 	Heap_Node DeleteMin();
-	friend void CreateHeap(Heap& H, int data[][Versum + 2]);
-	Weight FindEndVertex(const Vertex& data, VertexPro* Vertices);
-	Weight Compare(const Vertex& data);
+	friend void CreateHeap(Heap& H, int data[][Versum+2]);
+
 	void Traversal()
 	{
 		for (int i = 1; i <= Curr_Size; ++i) {
@@ -130,24 +131,6 @@ public:
 	}
 };
 
-Weight Heap::FindEndVertex(const Vertex& data, VertexPro* Vertices)
-{
-	int MinWeight = MAX, MinIndex = 1;
-	for (int i = 1; i <= Curr_Size; ++i)
-	{
-		if (header[i].GetEnd() == data && (header[i].GetWeight() + Vertices[header[i].GetStart()].GetDist()) < MinWeight)
-		{
-			//std::cout << header[i].GetStart() <<" " << (header[i].GetWeight() + Vertices[header[i].GetStart()].GetDist()) << std::endl;
-			MinWeight = Vertices[header[i].GetStart()].GetDist() + header[i].GetWeight();
-			MinIndex = i;
-		}
-	}
-	Vertices[data].GetDist() = MinWeight;
-	Vertices[data].GetPath() = header[MinIndex].GetStart();
-	Vertices[data].GetKnown() = 1;
-	//Vertices[data].OutputProperty();
-	return MinWeight;
-}
 Heap::Heap(const int&Size)
 {
 	Capacity = Size;
@@ -197,7 +180,7 @@ Heap_Node Heap::DeleteMin()
 	header[i] = last;
 	return temp;
 }
-void CreateHeap(Heap& H, int data[][Versum + 2])
+void CreateHeap(Heap& H, int data[][Versum+2])
 {
 	for (int i = 0; i < Versum; ++i)
 	{
@@ -212,49 +195,36 @@ void CreateHeap(Heap& H, int data[][Versum + 2])
 
 int main()
 {
-	int Graph[Versum][Versum + 2] = {
-
-		2,2,4,1,0,0,0,0,0,//Graph[0][0]指的是V1点到V2点Graph[0][1]指的是此路径的权值 0值代表结束
-		4,3,5,10,0,0,0,0,0,
-		1,4,6,5,0,0,0,0,0,
-		3,2,6,8,7,4,5,2,0,
-		7,6,0,0,0,0,0,0,0,
-		0,0,0,0,0,0,0,0,0,
-		6,1,0,0,0,0,0,0,0
-	};
+	int Graph[Versum][Versum+4] = {
+									2,2,3,4,4,1,0,0,0,0,0,
+									1,2,4,3,5,10,0,0,0,0,0,
+									1,4,4,2,6,5,0,0,0,0,0,
+									1,1,3,2,6,8,7,4,5,7,0,
+									2,10,4,7,7,6,0,0,0,0,0,
+									3,5,4,8,7,1,0,0,0,0,0,
+									6,1,4,4,5,6,0,0,0,0,0
+	                             };
 
 	int start = 1;//定义一个你所要到其他点最短距离的顶点
 	VertexPro* Vertices = Initiliaze_Vertex(Versum, start);
-	Heap H(100);
+	/*Heap H(100);
 	CreateHeap(H, Graph);
 	for (;;)
 	{
 		if (H.GetCurr_size() == 0)
 			break;
 		Heap_Node& temp = H.DeleteMin();
-		//temp.OutPut();
+		temp.OutPut();
 		Vertices[temp.GetEnd()].GetKnown() = 1;
 
 		if (Vertices[temp.GetEnd()].GetDist() == MAX)
 		{
 			Vertices[temp.GetEnd()].GetPath() = temp.GetStart();
 			Vertices[temp.GetEnd()].GetDist() = temp.GetWeight();
-			/*if (Vertices[temp.GetStart()].GetDist() == MAX)
-			{
-				//std::cout << "data: " << temp.GetStart() << std::endl;
-				Vertices[temp.GetEnd()].GetDist() = temp.GetWeight() + H.FindEndVertex(temp.GetStart(), Vertices);
-			}
-			else
-				Vertices[temp.GetEnd()].GetDist() = temp.GetWeight() + Vertices[temp.GetStart()].GetDist();*/
 
 		}
-		else if (Vertices[temp.GetEnd()].GetDist() != MAX /*&& temp.GetEnd() != start && Vertices[temp.GetEnd()].GetPath() != start*/)
+		else if (Vertices[temp.GetEnd()].GetDist() != MAX )
 		{
-			/*if ((temp.GetWeight() + Vertices[temp.GetStart()].GetDist()) < Vertices[temp.GetEnd()].GetDist())
-			{
-				Vertices[temp.GetEnd()].GetPath() = temp.GetStart();
-				Vertices[temp.GetEnd()].GetDist() = temp.GetWeight() + Vertices[temp.GetStart()].GetDist();
-			}*/
 			if (temp.GetWeight() < Vertices[temp.GetEnd()].GetDist())
 			{
 				Vertices[temp.GetEnd()].GetPath() = temp.GetStart();
@@ -263,6 +233,36 @@ int main()
 		}
 		else
 			continue;
+	}*/
+	int judge[Versum + 1] = { 0 };
+	for (int i = 0; i <= Versum; )
+	{
+		    int minindex = 0,min = MAX;
+		    for (int v = 1; v < Versum+1; v++) 
+		    {
+				//std::cout << v << " " << judge[v] << " " << Vertices[v].GetDist() << std::endl;
+				if (judge[v] == 0 && Vertices[v].GetDist() < min)
+				{
+					minindex = v;
+					min = Vertices[v].GetDist();
+				}
+		    }
+			if (minindex == 0)
+				break;
+		    i = minindex;
+
+			judge[i] = 1;
+			for (int j = 0; Graph[i-1][j]!=0; j += 2)
+			{
+				if (Vertices[Graph[i-1][j]].GetDist() > Graph[i - 1][j + 1] && judge[Graph[i - 1][j]] == 0)
+				{
+					Vertices[Graph[i - 1][j]].GetKnown() = 1;
+					Vertices[Graph[i - 1][j]].GetDist() = Graph[i - 1][j + 1];
+					Vertices[Graph[i - 1][j]].GetPath() = i;
+				}
+			}
+
+			
 	}
 	for (int i = 1; i < Versum + 1; ++i)
 	{
