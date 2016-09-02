@@ -254,11 +254,13 @@ int main()
 								 6,1,0,0,0,0,0,0,0
 	};
 
-	int start = 1;//定义一个你所要到其他点最短距离的顶点
+	int start = 4;//定义一个你所要到其他点最短距离的顶点
 	VertexPro* Vertices = Initiliaze_Vertex(Versum, start);
 	Heap H(100);
 	CreateHeap(H, Graph);
-	for (;;)
+	for (;;)/*
+			*整个部分就是Prim算法
+			*/
 	{
 		if (H.GetCurr_size() == 0)
 			break;
@@ -270,31 +272,50 @@ int main()
 			                                          //   Dist等的是weight加上Vertices[temp.GetStart()].GetDist()
 		{
 			Vertices[temp.GetEnd()].GetPath() = temp.GetStart();
-			if (Vertices[temp.GetStart()].GetDist() == MAX)
-			{
-				//std::cout << "data: " << temp.GetStart() << std::endl;
-				Vertices[temp.GetEnd()].GetDist() = temp.GetWeight() + H.FindEndVertex(temp.GetStart(), Vertices);
-			}
-			else
-			Vertices[temp.GetEnd()].GetDist() = temp.GetWeight() + Vertices[temp.GetStart()].GetDist();
+			
+			Vertices[temp.GetEnd()].GetDist() = temp.GetWeight();
 
 		}
-		else if (Vertices[temp.GetEnd()].GetDist() != MAX && temp.GetEnd() != start && Vertices[temp.GetEnd()].GetPath() != start)
+		else if (Vertices[temp.GetEnd()].GetDist() != MAX && Vertices[temp.GetEnd()].GetPath() != start)
 		{
-
-			if ((temp.GetWeight() + Vertices[temp.GetStart()].GetDist()) < Vertices[temp.GetEnd()].GetDist())
+			if (temp.GetWeight() < Vertices[temp.GetEnd()].GetDist())
 			{
 				Vertices[temp.GetEnd()].GetPath() = temp.GetStart();
-				Vertices[temp.GetEnd()].GetDist() = temp.GetWeight() + Vertices[temp.GetStart()].GetDist();
+				Vertices[temp.GetEnd()].GetDist() = temp.GetWeight();
 			}
 		}
 		else
 			continue;
 	}
-	for (int i = 1; i < Versum+1; ++i)
+
+	for (int i = Versum ; i >= 1; --i)/*修改每个顶点Dist是到源点的距离，而不是到距离最近的顶点的距离*/
 	{
-		std::cout << i << " ";
-		Vertices[i].OutputProperty();
+		int Curr = Vertices[i].GetPath();
+		if (Curr == 0)
+			continue;
+		int Sum = Vertices[i].GetDist();
+		while (Curr != start)
+		{
+			Sum += Vertices[Curr].GetDist();
+			Curr = Vertices[Curr].GetPath();//一层一层上去
+		}
+		Vertices[i].GetDist() = Sum;
 	}
+	/*打印*/
+        int coutsum = 0;
+		for (int i = start; i < Versum+1; ++i)
+		{
+			std::cout <<'V'<<i << ": ";
+			Vertices[i].OutputProperty();
+			coutsum++;
+		}
+		if (Versum != coutsum)
+		{
+			for (int i = 1; i < Versum + 1-coutsum; ++i)
+			{
+				std::cout << 'V' << i << ": ";
+				Vertices[i].OutputProperty();
+			} 
+		}
 
 }
