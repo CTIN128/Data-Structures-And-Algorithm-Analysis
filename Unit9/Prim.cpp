@@ -27,12 +27,11 @@ void PrintPath(int SourceVertex, int vertex, std::vector<Vertex> v)
 }
 int main()
 {
-	int SourceVetex = 0;
+	int SourceVetex = 6;
 	std::vector<Vertex> vec(7);
 	vec[SourceVetex].Close_Dist = 0;
-	vec[SourceVetex].Path = 0;
+	vec[SourceVetex].Path = SourceVetex;
 	std::priority_queue<Vertex> pq;
-	std::vector<int> lowcost(7, INT_MAX);
 	int Graph[][7] =
 	{
 		0,2,4,1,INT_MAX,INT_MAX,INT_MAX,
@@ -51,12 +50,12 @@ int main()
 		vec[tmpcell.Number].Known = true;
 		for (int i = 0; i < 7; ++i)
 		{
-			if (i != tmpcell.Number&&!vec[i].Known&&Graph[tmpcell.Number][i] < lowcost[i])
+			if (i != tmpcell.Number&&!vec[i].Known&&Graph[tmpcell.Number][i] < vec[i].Close_Dist)
 			{
-				lowcost[i] = Graph[tmpcell.Number][i];
 				vec[i].Path = tmpcell.Number;
 				vec[i].Close_Dist = Graph[tmpcell.Number][i];
 				pq.push(Vertex(i, vec[i].Close_Dist));
+
 			}
 		}
 	}
