@@ -1,3 +1,4 @@
+algo1
 /*
  Node*  rotate_linkedlist(Node * header)
  {
@@ -13,3 +14,18 @@
  }
  */
 make the singly Linkedlist rotate
+
+
+algo2
+/*
+public ListNode reverse(ListNode head) {
+    ListNode prev = null;
+    while (head != null) {
+        ListNode next = head.next;
+        head.next = prev;
+        prev = head;
+        head = next;
+    }
+    return prev;
+}
+*/
