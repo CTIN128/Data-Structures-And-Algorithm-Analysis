@@ -60,17 +60,20 @@ int main()
 		++IsKnown;//判断是否都已访问过
 		for (int i = 0; i < 7; ++i)
 		{
-			if (Graph[tmpcell.Number][i] != INT_MAX&&Graph[tmpcell.Number][i] != 0 && !Known[i])
+			if (Graph[tmpcell.Number][i] != INT_MAX && !Known[i]&& Graph[tmpcell.Number][i] < vec[i].Close_Dist)
 			{
-				pq.push(Vertex(i, Graph[tmpcell.Number][i]));
-				if (Graph[tmpcell.Number][i] < vec[i].Close_Dist)//如果tmpcell.number点到i的值比原来close_dist的小，则更新。
-				{                                                //此时close_dist不是该点到源点距离而是该点到离他最近点的距离
 					vec[i].Close_Dist = Graph[tmpcell.Number][i];
 					vec[i].Path = tmpcell.Number;
-				}
-			}
+					pq.push(Vertex(i, Graph[tmpcell.Number][i]));
+			} 
 		}
 	}
+	/*
+	按照算法导论所说，先把所有节点压入pq中，源点的dist设置为0，此时的dist与Dijkstra的dist不一样，
+	此时是该点到最近点的距离，而dijkstra是到源点的距离，增加了是否访问过的判断，
+  因为我们每次都选取最短的距离，所以我们只要pq中弹出的这个点，那就是已经确定好的前驱点是谁了，
+	不用再管其他的
+	*/
 	for (int i = 0; i < 7; ++i)
 	{
 		std::cout << "Vertex: " << i << std::endl;
